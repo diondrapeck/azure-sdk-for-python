@@ -11,6 +11,7 @@ from .._util import _DSL_TIMEOUT_SECOND
 
 @pytest.mark.timeout(_DSL_TIMEOUT_SECOND)
 @pytest.mark.unittest
+@pytest.mark.pipeline_test
 class TestAttrDict:
     def test_attr_dict(self):
         obj = _AttrDict()
@@ -80,3 +81,8 @@ class TestAttrDict:
         assert not obj
         obj.continue_on_step_failure = False
         assert obj
+
+    def test_attr_dict_false_value(self):
+        obj = _AttrDict()
+        obj.false_value = False
+        assert obj._get_attrs() == {"false_value": False}
