@@ -998,3 +998,8 @@ def get_valid_dot_keys_with_wildcard(
     """
     left_reversed_parts = dot_key_wildcard.split(".")[::-1]
     return _get_valid_dot_keys_with_wildcard_impl(left_reversed_parts, root, validate_func=validate_func)
+
+
+def replace_between(s: str, start: str, end: str, replace: str) -> str:
+    """Replace string between two substrings."""
+    return start + replace + s[s.find(end) - 1 + len(end) :]

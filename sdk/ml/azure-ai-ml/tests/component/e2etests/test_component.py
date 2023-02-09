@@ -124,6 +124,7 @@ def assert_component_basic_workflow(
     "mock_asset_name",
     "mock_component_hash",
     "enable_environment_id_arm_expansion",
+    "mock_snapshot_hash",
 )
 @pytest.mark.pipeline_test
 class TestComponent(AzureRecordedTestCase):
@@ -855,6 +856,7 @@ class TestComponent(AzureRecordedTestCase):
             node = default_component()
             assert node._to_rest_object()["componentId"] == default_component.id
 
+    @pytest.mark.usefixtures("mock_anon_component_version")
     def test_command_component_with_properties_e2e_flow(self, client: MLClient, randstr: Callable[[str], str]) -> None:
         command_component = load_component(
             source="./tests/test_configs/components/helloworld_component_with_properties.yml",
