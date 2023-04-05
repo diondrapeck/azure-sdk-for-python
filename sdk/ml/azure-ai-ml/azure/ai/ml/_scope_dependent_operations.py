@@ -45,6 +45,7 @@ class OperationConfig(object):
 
 
 class OperationScope(object):
+    """This class is used to store scope variables for the operations classes of an MLClient object."""
     def __init__(
         self,
         subscription_id: str,
@@ -116,6 +117,7 @@ class _ScopeDependentOperations(object):
 
 
 class OperationsContainer(object):
+    """This class is used to store all operations classes of an MLClient object."""
     def __init__(self):
         self._all_operations = {}
 
