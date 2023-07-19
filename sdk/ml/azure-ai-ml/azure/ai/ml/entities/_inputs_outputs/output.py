@@ -20,24 +20,20 @@ from .utils import _remove_empty_values
 class Output(_InputOutputBase):
     """Define an output for a Component or Job.
 
-    :param type: The type of the data output. Accepted values are 'uri_folder', 'uri_file', 'mltable', 'mlflow_model',
-        'custom_model', and user-defined types.
+    Defaults to URI folder type output.
+
+    :param type: The type of the data output. Accepted values are: 'uri_folder', 'uri_file', 'mltable', 'mlflow_model',
+        'custom_model', and user-defined types. Defaults to 'uri_folder'.
     :type type: str
-    :param path: The cloud path where the output should be stored.
-    :type path: str
+    :param path: The remote path where the output should be stored.
+    :type path: Optional[str]
     :param mode: The access mode of the data output. Accepted values are:
-        'rw_mount': Read-write mount the data,
-        'upload': Upload the data from the compute target,
-        'direct': Pass in the URI as a string
-    :type mode: str
-    :param description: The description of the output.
-    :type description: str
-    :param name: The name to be used to register the output as a Data or Model asset. A name can be set without
-        setting a version.
-    :type name: str
-    :param version: The version used to register the output as a Data or Model asset. A version can be set only
-        when name is set.
-    :type version: str
+        * 'rw_mount': Read-write mount the data
+        * 'upload': Upload the data from the compute target
+        * 'direct': Pass in the URI as a string
+    :type mode: Optional[str]
+    :param description: The description of the output. Defaults to None.
+    :type description: Optional[str]
 
     .. admonition:: Example:
 
@@ -56,20 +52,14 @@ class Output(_InputOutputBase):
         :param type: The type of the data output. Can only be set to "uri_folder".
         :type type: str
         :param path: The cloud path where the output should be stored.
-        :type path: str
+        :type path: Optional[str]
         :param mode: The access mode of the data output. Accepted values are:
-            'rw_mount': Read-write mount the data,
-            'upload': Upload the data from the compute target,
-            'direct': Pass in the URI as a string
-        :type mode: str
-        :param description: The description of the output.
-        :type description: str
-        :param name: The name to be used to register the output as a Data or Model asset. A name can be set without
-            setting a version.
-        :type name: str
-        :param version: The version used to register the output as a Data or Model asset. A version can be set only
-            when name is set.
-        :type version: str
+            * 'rw_mount': Read-write mount the data
+            * 'upload': Upload the data from the compute target
+            * 'direct': Pass in the URI as a string
+        :type mode: Optional[str]
+        :param description: The description of the output. Defaults to None.
+        :type description: Optional[str]
         """
 
     @overload
@@ -79,20 +69,20 @@ class Output(_InputOutputBase):
         :param type: The type of the data output. Can only be set to 'uri_file'.
         :type type: str
         :param path: The cloud path where the output should be stored.
-        :type path: str
+        :type path: Optional[str]
         :param mode: The access mode of the data output. Accepted values are:
-            'rw_mount': Read-write mount the data,
-            'upload': Upload the data from the compute target,
-            'direct': Pass in the URI as a string
-        :type mode: str
-        :param description: The description of the output.
-        :type description: str
+            * 'rw_mount': Read-write mount the data
+            * 'upload': Upload the data from the compute target
+            * 'direct': Pass in the URI as a string
+        :type mode: Optional[str]
+        :param description: The description of the output. Defaults to None
+        :type description: Optional[str]
         :param name: The name to be used to register the output as a Data or Model asset. A name can be set without
-            setting a version.
-        :type name: str
+            setting a version. Defaults to None.
+        :type name: Optional[str]
         :param version: The version used to register the output as a Data or Model asset. A version can be set only
-            when name is set.
-        :type version: str
+            when name is set. Defaults to None.
+        :type version: Optional[str]
         """
 
     def __init__(self, *, type=AssetTypes.URI_FOLDER, path=None, mode=None, description=None, **kwargs) -> None:

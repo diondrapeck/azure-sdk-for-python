@@ -56,49 +56,49 @@ class CommandJob(Job, ParameterizedCommand, JobIOMixin):
     """Command job.
 
     :param name: The name of the job.
-    :type name: str
-    :param description: The job description.
-    :type description: str
-    :param tags: Tag dictionary. Tags can be added, removed, and updated.
-    :type tags: dict[str, str]
+    :type name: Optional[str]
+    :param description: The job description. Defaults to None.
+    :type description: Optional[str]
+    :param tags: Tag dictionary. Tags can be added, removed, and updated. Defaults to None.
+    :type tags: Optional[dict[str, str]]
     :param display_name: The job display name.
-    :type display_name: str
-    :param properties: A dictionary of properties for the job.
-    :type properties: dict[str, str]
+    :type display_name: Optional[str]
+    :param properties: A dictionary of properties for the job. Defaults to None.
+    :type properties: Optional[dict[str, str]]
     :param experiment_name: The name of the experiment that the job will be created under. Defaults to current
         directory name.
-    :type experiment_name: str
+    :type experiment_name: Optional[str]
     :param services: Read-only information on services associated with the job.
-    :type services: dict[str, ~azure.ai.ml.entities.JobService]
-    :param inputs: Mapping of output data bindings used in the command.
-    :type inputs: dict[str, Union[~azure.ai.ml.Input, str, bool, int, float]]
-    :param outputs: Mapping of output data bindings used in the job.
-    :type outputs: dict[str, ~azure.ai.ml.Output]
+    :type services: Optional[dict[str, ~azure.ai.ml.entities.JobService]]
+    :param inputs: Mapping of input data bindings used in the command. Defaults to None.
+    :type inputs: Optional[dict[str, Union[~azure.ai.ml.Input, str, bool, int, float]]]
+    :param outputs: Mapping of output data bindings used in the job. Defaults to None.
+    :type outputs: Optional[dict[str, ~azure.ai.ml.Output]]
     :param command: The command to be executed.
-    :type command: str
+    :type command: Optional[str]
     :param compute: The compute target the job runs on.
-    :type compute: str
-    :param resources: The compute resource configuration for the job.
-    :type resources: ~azure.ai.ml.entities.ResourceConfiguration
+    :type compute: Optional[str]
+    :param resources: The compute resource configuration for the job. Defaults to None.
+    :type resources: Optional[~azure.ai.ml.entities.ResourceConfiguration]
     :param code: A local path or "http:", "https:", or "azureml:" url pointing to a remote location.
-    :type code: str
-    :param distribution: The distribution configuration for distributed jobs.
-    :type distribution: Union[
+    :type code: Optional[str]
+    :param distribution: The distribution configuration for distributed jobs. Defaults to None.
+    :type distribution: Optional[Union[
         ~azure.ai.ml.PyTorchDistribution,
         ~azure.ai.ml.MpiDistribution,
         ~azure.ai.ml.TensorFlowDistribution,
-        ~azure.ai.ml.RayDistribution]
+        ~azure.ai.ml.RayDistribution]]
     :param environment: The environment that the job will run in.
-    :type environment: Union[~azure.ai.ml.entities.Environment, str]
-    :param identity: The identity that the job will use while running on compute.
-    :type identity: Union[
+    :type environment: Optional[Union[~azure.ai.ml.entities.Environment, str]]
+    :param identity: The identity that the job will use while running on compute. Defaults to None.
+    :type identity: Optional[Union[
         ~azure.ai.ml.ManagedIdentityConfiguration,
         ~azure.ai.ml.AmlTokenConfiguration,
-        ~azure.ai.ml.UserIdentityConfiguration]
-    :param limits: The limits for the job.
-    :type limits: ~azure.ai.ml.entities.CommandJobLimits
+        ~azure.ai.ml.UserIdentityConfiguration]]
+    :param limits: The limits for the job. Defaults to None.
+    :type limits: Optional[~azure.ai.ml.entities.CommandJobLimits]
     :param kwargs: A dictionary of additional configuration parameters.
-    :type kwargs: dict
+    :type kwargs: Optional[dict]
 
     .. admonition:: Example:
         :class: tip
@@ -141,7 +141,7 @@ class CommandJob(Job, ParameterizedCommand, JobIOMixin):
         """MLFlow parameters.
 
         :return: MLFlow parameters logged in job.
-        :rtype: Dict[str, str]
+        :rtype: dict[str, str]
         """
         return self._parameters
 

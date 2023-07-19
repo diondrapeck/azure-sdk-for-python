@@ -28,29 +28,32 @@ from .utils import _get_param_with_standard_annotation, _remove_empty_values
 class Input(_InputOutputBase):  # pylint: disable=too-many-instance-attributes
     """Defines an input for a Component or Job.
 
+    Defaults to URI folder type input.
+
     :param type: The type of the data input. Accepted values are:
-        'uri_folder', 'uri_file', 'mltable', 'mlflow_model', 'custom_model', 'integer', 'number', 'string', 'boolean'
+        'uri_folder', 'uri_file', 'mltable', 'mlflow_model', 'custom_model', 'integer', 'number', 'string', 'boolean'.
+        Defaults to 'uri_folder'.
     :type type: str
     :param path: The path to the input data. Paths can be local paths, cloud data uris, or a registered AzureML asset
-        id.
-    :type path: str
+        ID.
+    :type path: Optional[str]
     :param mode: The access mode of the data input. Accepted are:
-        'ro_mount': Mount the data to the compute target as read-only,
-        'download': Download the data to the compute target,
-        'direct': Pass in the URI as a string to be accessed at runtime
-    :type mode: str
+        * 'ro_mount': Mount the data to the compute target as read-only
+        * 'download': Download the data to the compute target
+        * 'direct': Pass in the URI as a string to be accessed at runtime
+    :type mode: Optional[str]
     :param default: The default value of the input. If a default is set, the input data will be optional.
-    :type default: Union[str, int, float, bool]
+    :type default: Optional[Union[str, int, float, bool]]
     :param min: The minimum value for the input. If a value smaller than the minimum is passed to the job, the job
         execution will fail.
-    :type min: Union[int, float]
+    :type min: Optional[Union[int, float]]
     :param max: The maximum value for the input. If a value larger than the maximum is passed to a job, the job
         execution will fail.
-    :type max: Union[integer, float]
+    :type max: Optional[Union[integer, float]]
     :param optional: Specifies if the input is optional.
-    :type optional: bool
+    :type optional: Optional[bool]
     :param description: Description of the input
-    :type description: str
+    :type description: Optional[str]
     :raises ~azure.ai.ml.exceptions.ValidationException: Raised if Input cannot be successfully validated.
         Details will be provided in the error message.
 
@@ -85,9 +88,9 @@ class Input(_InputOutputBase):  # pylint: disable=too-many-instance-attributes
             asset id.
         :type path: str
         :param mode: The mode of the data input. Accepted are:
-            'ro_mount': Mount the data to the compute target as read-only,
-            'download': Download the data to the compute target,
-            'direct': Pass in the URI as a string to be accessed at runtime
+            * 'ro_mount': Mount the data to the compute target as read-only
+            * 'download': Download the data to the compute target
+            * 'direct': Pass in the URI as a string to be accessed at runtime
         :type mode: str
         :param optional: Specifies if the input is optional.
         :type optional: bool
