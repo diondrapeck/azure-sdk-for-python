@@ -45,6 +45,8 @@ class Output(_InputOutputBase):
             :caption: Creating a CommandJob with a folder output.
     """
 
+    _IO_KEYS = ["name", "version", "path", "type", "mode", "description", "is_control", "early_available"]
+
     @overload
     def __init__(self, type: Literal["uri_folder"] = "uri_folder", path=None, mode=None, description=None) -> None:
         """Define a URI folder output for a Component or Job.
@@ -117,7 +119,7 @@ class Output(_InputOutputBase):
 
     def _to_dict(self):
         """Convert the Output object to a dict."""
-        keys = ["name", "version", "path", "type", "mode", "description", "is_control", "early_available"]
+        keys = self._IO_KEYS
         result = {key: getattr(self, key) for key in keys}
         return _remove_empty_values(result)
 
