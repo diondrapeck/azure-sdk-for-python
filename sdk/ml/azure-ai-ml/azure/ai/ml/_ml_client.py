@@ -272,6 +272,7 @@ class MLClient:
             app_insights_handler_kwargs = {"app_insights_handler": app_insights_handler}
         except:  # pylint: disable=bare-except
             # ignore any exceptions, telemetry collection errors shouldn't block an operation
+            self._operation_config.enable_telemetry = False
             app_insights_handler_kwargs = {}
 
         base_url = _get_base_url_from_metadata(cloud_name=cloud_name, is_local_mfe=True)
