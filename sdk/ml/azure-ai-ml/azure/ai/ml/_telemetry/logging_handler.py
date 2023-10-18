@@ -10,16 +10,11 @@ import logging
 import platform
 import traceback
 
-from opencensus.ext.azure.log_exporter import AzureLogHandler
 from opencensus.ext.azure.common import utils
-from opencensus.ext.azure.common.protocol import (
-    Data,
-    ExceptionData,
-    Message,
-    Envelope,
-)
-from azure.ai.ml._user_agent import USER_AGENT
+from opencensus.ext.azure.common.protocol import Data, Envelope, ExceptionData, Message
+from opencensus.ext.azure.log_exporter import AzureLogHandler
 
+from azure.ai.ml._user_agent import USER_AGENT
 
 AML_INTERNAL_LOGGER_NAMESPACE = "azure.ai.ml._telemetry"
 
@@ -107,40 +102,36 @@ def get_appinsights_log_handler(
     :return: The logging handler.
     :rtype: AzureMLSDKLogHandler
     """
-    try:
-        if instrumentation_key is None:
-            instrumentation_key = INSTRUMENTATION_KEY
+    if instrumentation_key is None:
+        instrumentation_key = INSTRUMENTATION_KEY
 
-        if not in_jupyter_notebook() or not enable_telemetry:
-            return logging.NullHandler()
-
-        if not user_agent or not user_agent.lower() == USER_AGENT.lower():
-            return logging.NullHandler()
-
-        if "properties" in kwargs and "subscription_id" in kwargs.get("properties"):
-            if kwargs.get("properties")["subscription_id"] in test_subscriptions:
-                return logging.NullHandler()
-
-        child_namespace = component_name or __name__
-        current_logger = logging.getLogger(AML_INTERNAL_LOGGER_NAMESPACE).getChild(child_namespace)
-        current_logger.propagate = False
-        current_logger.setLevel(logging.CRITICAL)
-
-        custom_properties = {"PythonVersion": platform.python_version()}
-        custom_properties.update({"user_agent": user_agent})
-        if "properties" in kwargs:
-            custom_properties.update(kwargs.pop("properties"))
-        handler = AzureMLSDKLogHandler(
-            connection_string=f"InstrumentationKey={instrumentation_key}",
-            custom_properties=custom_properties,
-            enable_telemetry=enable_telemetry,
-        )
-        current_logger.addHandler(handler)
-
-        return handler
-    except Exception:  # pylint: disable=broad-except
-        # ignore any exceptions, telemetry collection errors shouldn't block an operation
+    if not in_jupyter_notebook() or not enable_telemetry:
         return logging.NullHandler()
+
+    if not user_agent or not user_agent.lower() == USER_AGENT.lower():
+        return logging.NullHandler()
+
+    if "properties" in kwargs and "subscription_id" in kwargs.get("properties"):
+        if kwargs.get("properties")["subscription_id"] in test_subscriptions:
+            return logging.NullHandler()
+
+    child_namespace = component_name or __name__
+    current_logger = logging.getLogger(AML_INTERNAL_LOGGER_NAMESPACE).getChild(child_namespace)
+    current_logger.propagate = False
+    current_logger.setLevel(logging.CRITICAL)
+
+    custom_properties = {"PythonVersion": platform.python_version()}
+    custom_properties.update({"user_agent": user_agent})
+    if "properties" in kwargs:
+        custom_properties.update(kwargs.pop("properties"))
+    handler = AzureMLSDKLogHandler(
+        connection_string=f"InstrumentationKey={instrumentation_key}",
+        custom_properties=custom_properties,
+        enable_telemetry=enable_telemetry,
+    )
+    current_logger.addHandler(handler)
+
+    return handler
 
 
 # cspell:ignore AzureMLSDKLogHandler
