@@ -20,9 +20,7 @@ import os
 
 
 class RouterWorkerSamples(object):
-    endpoint = os.environ.get("AZURE_COMMUNICATION_SERVICE_ENDPOINT", None)
-    if not endpoint:
-        raise ValueError("Set AZURE_COMMUNICATION_SERVICE_ENDPOINT env before run this sample.")
+    endpoint = os.environ["AZURE_COMMUNICATION_SERVICE_ENDPOINT"]
 
     _worker_id = "sample_worker"
     _distribution_policy_id = "sample_dp_policy"
@@ -97,9 +95,9 @@ class RouterWorkerSamples(object):
                 capacity=100,
                 queues=["worker-q-1", "worker-q-2"],
                 channels=[
-                    RouterChannel(channel_id = "WebChat", capacity_cost_per_job=1),
-                    RouterChannel(channel_id = "WebChatEscalated", capacity_cost_per_job=20),
-                    RouterChannel(channel_id = "Voip", capacity_cost_per_job=100),
+                    RouterChannel(channel_id="WebChat", capacity_cost_per_job=1),
+                    RouterChannel(channel_id="WebChatEscalated", capacity_cost_per_job=20),
+                    RouterChannel(channel_id="Voip", capacity_cost_per_job=100),
                 ],
                 labels={"Location": "NA", "English": 7, "O365": True, "Xbox_Support": False},
                 tags={"Name": "John Doe", "Department": "IT_HelpDesk"},
@@ -136,7 +134,7 @@ class RouterWorkerSamples(object):
         updated_router_worker: RouterWorker = router_client.upsert_worker(
             worker_id,
             queues=["worker-q-3"],
-            channels=[RouterChannel(channel_id = "WebChatEscalated", capacity_cost_per_job=50)],
+            channels=[RouterChannel(channel_id="WebChatEscalated", capacity_cost_per_job=50)],
             labels={"O365": "Supported", "Xbox_Support": None, "Xbox_Support_EN": True},
         )
 
