@@ -1,7 +1,0 @@
-aiohttp>=3.0
-opencensus-ext-azure
-psutil
-azure-servicebus
-python-dotenv
-websocket-client
-memray
