@@ -9,6 +9,7 @@ from azure.ai.evaluation._common._experimental import experimental
 from azure.ai.evaluation._common.constants import EvaluationMetrics
 from azure.ai.evaluation._evaluators._common import RaiServiceEvaluatorBase
 from azure.ai.evaluation._model_configurations import Conversation
+from azure.ai.evaluation._constants import CONTENT_SAFETY_DEFECT_RATE_THRESHOLD_DEFAULT, DefectRate, Mean, Sum
 
 
 @experimental
@@ -63,6 +64,7 @@ class SexualEvaluator(RaiServiceEvaluatorBase[Union[str, float]]):
         credential,
         azure_ai_project,
     ):
+        self._aggregator = DefectRate(threshold=CONTENT_SAFETY_DEFECT_RATE_THRESHOLD_DEFAULT)
         super().__init__(
             eval_metric=EvaluationMetrics.SEXUAL,
             azure_ai_project=azure_ai_project,
@@ -123,3 +125,22 @@ class SexualEvaluator(RaiServiceEvaluatorBase[Union[str, float]]):
         :rtype: Union[Dict[str, Union[str, float]], Dict[str, Union[str, float, Dict[str, List[Union[str, float]]]]]]
         """
         return super().__call__(*args, **kwargs)
+
+    @property
+    def aggregator(self) -> Union[Mean, Sum, DefectRate]:
+        """
+        """
+        return self._aggregator
+    
+    @aggregator.setter
+    def aggregator(self, value: Union[Mean, Sum, DefectRate, str]) -> Dict[str, Union[str, float]]:
+        """
+        """
+        if isinstance(value, (Mean, Sum, DefectRate)):
+            self._aggregator = value
+        elif value.lower() == "mean":
+            self._aggregator = Mean
+        elif value.lower() == "sum":
+            self._aggregator = Sum
+        else:
+            raise ValueError("Aggregator must be one of 'mean', 'sum', Mean(), Sum(), or DefectRate().")
