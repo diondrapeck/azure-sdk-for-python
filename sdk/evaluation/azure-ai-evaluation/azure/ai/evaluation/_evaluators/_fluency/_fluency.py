@@ -7,11 +7,11 @@ from typing import Dict, List, Union
 
 from typing_extensions import overload, override
 
-from azure.ai.evaluation._evaluators._common import PromptyEvaluatorBase
+from azure.ai.evaluation._evaluators._common import PromptyEvaluatorBase, AggregationMixin
 from azure.ai.evaluation._model_configurations import Conversation
 
 
-class FluencyEvaluator(PromptyEvaluatorBase[Union[str, float]]):
+class FluencyEvaluator(PromptyEvaluatorBase[Union[str, float]], AggregationMixin):
     """
     Evaluates the fluency of a given response or a multi-turn conversation, including reasoning.
 

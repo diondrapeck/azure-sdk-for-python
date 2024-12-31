@@ -7,7 +7,7 @@ from typing import Dict, List, Optional, Union
 from typing_extensions import overload, override
 from promptflow.core import AsyncPrompty
 
-from azure.ai.evaluation._evaluators._common import PromptyEvaluatorBase
+from azure.ai.evaluation._evaluators._common import PromptyEvaluatorBase, AggregationMixin
 from azure.ai.evaluation._model_configurations import Conversation
 from ..._common.utils import construct_prompty_model_config, validate_model_config
 
@@ -17,7 +17,7 @@ except ImportError:
     USER_AGENT = "None"
 
 
-class GroundednessEvaluator(PromptyEvaluatorBase[Union[str, float]]):
+class GroundednessEvaluator(PromptyEvaluatorBase[Union[str, float]], AggregationMixin):
     """
     Evaluates groundedness score for a given query (optional), response, and context or a multi-turn conversation,
     including reasoning.

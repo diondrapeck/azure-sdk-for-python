@@ -6,12 +6,12 @@ from typing_extensions import overload, override
 
 from azure.ai.evaluation._common._experimental import experimental
 from azure.ai.evaluation._common.constants import EvaluationMetrics
-from azure.ai.evaluation._evaluators._common import RaiServiceEvaluatorBase
+from azure.ai.evaluation._evaluators._common import RaiServiceEvaluatorBase, AggregationMixin
 from azure.ai.evaluation._model_configurations import Conversation
 
 
 @experimental
-class GroundednessProEvaluator(RaiServiceEvaluatorBase[Union[str, bool]]):
+class GroundednessProEvaluator(RaiServiceEvaluatorBase[Union[str, bool]], AggregationMixin):
     """
     Evaluates service-based groundedness score for a given response, context, and query or a multi-turn conversation,
     including reasoning.

@@ -8,12 +8,12 @@ from typing_extensions import overload, override
 
 from azure.ai.evaluation._common._experimental import experimental
 from azure.ai.evaluation._common.constants import EvaluationMetrics
-from azure.ai.evaluation._evaluators._common import RaiServiceEvaluatorBase
+from azure.ai.evaluation._evaluators._common import RaiServiceEvaluatorBase, AggregationMixin, DefectRate
 from azure.ai.evaluation._model_configurations import Conversation
 
 
 @experimental
-class ProtectedMaterialEvaluator(RaiServiceEvaluatorBase[Union[str, bool]]):
+class ProtectedMaterialEvaluator(RaiServiceEvaluatorBase[Union[str, bool]], AggregationMixin):
     """
     Evaluates the protected material score for a given query and response or a multi-turn conversation, with reasoning.
 
@@ -48,6 +48,8 @@ class ProtectedMaterialEvaluator(RaiServiceEvaluatorBase[Union[str, bool]]):
         credential,
         azure_ai_project,
     ):
+        self._aggregator = DefectRate()
+
         super().__init__(
             eval_metric=EvaluationMetrics.PROTECTED_MATERIAL,
             azure_ai_project=azure_ai_project,

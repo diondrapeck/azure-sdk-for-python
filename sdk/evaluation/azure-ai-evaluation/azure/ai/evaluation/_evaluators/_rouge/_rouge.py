@@ -7,7 +7,7 @@ from typing import Dict
 from typing_extensions import overload, override
 
 from azure.ai.evaluation._vendor.rouge_score import rouge_scorer
-from azure.ai.evaluation._evaluators._common import EvaluatorBase
+from azure.ai.evaluation._evaluators._common import EvaluatorBase, AggregationMixin
 
 
 class RougeType(Enum):
@@ -34,7 +34,7 @@ class RougeType(Enum):
     """Overlap of L-grams (L consecutive words) between generated and reference text."""
 
 
-class RougeScoreEvaluator(EvaluatorBase):
+class RougeScoreEvaluator(EvaluatorBase, AggregationMixin):
     """
     Calculates the ROUGE score for a given response and ground truth.
 

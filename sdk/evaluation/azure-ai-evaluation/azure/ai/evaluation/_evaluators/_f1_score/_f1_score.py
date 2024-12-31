@@ -6,10 +6,10 @@ from collections import Counter
 from typing import List, Dict
 from typing_extensions import overload, override
 
-from azure.ai.evaluation._evaluators._common import EvaluatorBase
+from azure.ai.evaluation._evaluators._common import EvaluatorBase, AggregationMixin
 
 
-class F1ScoreEvaluator(EvaluatorBase):
+class F1ScoreEvaluator(EvaluatorBase, AggregationMixin):
     """
     Calculates the F1 score for a given response and ground truth or a multi-turn conversation.
 

@@ -7,10 +7,10 @@ from typing_extensions import overload, override
 
 from azure.ai.evaluation._common.utils import nltk_tokenize
 
-from azure.ai.evaluation._evaluators._common import EvaluatorBase
+from azure.ai.evaluation._evaluators._common import EvaluatorBase, AggregationMixin
 
 
-class GleuScoreEvaluator(EvaluatorBase):
+class GleuScoreEvaluator(EvaluatorBase, AggregationMixin):
     """
     Calculates the GLEU (Google-BLEU) score between a response and the ground truth.
 

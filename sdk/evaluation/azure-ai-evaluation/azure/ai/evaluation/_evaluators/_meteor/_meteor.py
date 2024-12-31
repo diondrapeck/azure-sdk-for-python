@@ -7,10 +7,10 @@ from nltk.translate.meteor_score import meteor_score
 from typing_extensions import overload, override
 
 from azure.ai.evaluation._common.utils import nltk_tokenize, ensure_nltk_data_downloaded
-from azure.ai.evaluation._evaluators._common import EvaluatorBase
+from azure.ai.evaluation._evaluators._common import EvaluatorBase, AggregationMixin
 
 
-class MeteorScoreEvaluator(EvaluatorBase):
+class MeteorScoreEvaluator(EvaluatorBase, AggregationMixin):
     """
     Calculates the METEOR score for a given response and ground truth.
 

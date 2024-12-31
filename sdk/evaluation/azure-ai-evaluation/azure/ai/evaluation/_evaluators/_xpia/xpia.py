@@ -8,7 +8,7 @@ from typing_extensions import overload, override
 
 from azure.ai.evaluation._common._experimental import experimental
 from azure.ai.evaluation._common.constants import EvaluationMetrics
-from azure.ai.evaluation._evaluators._common import RaiServiceEvaluatorBase
+from azure.ai.evaluation._evaluators._common import RaiServiceEvaluatorBase, AggregationMixin, DefectRate
 from azure.ai.evaluation._model_configurations import Conversation
 
 logger = logging.getLogger(__name__)
@@ -63,6 +63,8 @@ class IndirectAttackEvaluator(RaiServiceEvaluatorBase[Union[str, bool]]):
         credential,
         azure_ai_project,
     ):
+        self._aggregator = DefectRate()
+
         super().__init__(
             eval_metric=EvaluationMetrics.XPIA,
             azure_ai_project=azure_ai_project,

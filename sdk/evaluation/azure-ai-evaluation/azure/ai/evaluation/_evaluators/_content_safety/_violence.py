@@ -7,12 +7,13 @@ from typing_extensions import overload, override
 
 from azure.ai.evaluation._common._experimental import experimental
 from azure.ai.evaluation._common.constants import EvaluationMetrics
-from azure.ai.evaluation._evaluators._common import RaiServiceEvaluatorBase
+from azure.ai.evaluation._evaluators._common import RaiServiceEvaluatorBase, DefectRate, AggregationMixin
 from azure.ai.evaluation._model_configurations import Conversation
+from azure.ai.evaluation._constants import CONTENT_SAFETY_DEFECT_RATE_THRESHOLD_DEFAULT
 
 
 @experimental
-class ViolenceEvaluator(RaiServiceEvaluatorBase[Union[str, float]]):
+class ViolenceEvaluator(RaiServiceEvaluatorBase[Union[str, float]], AggregationMixin):
     """
     Evaluates the violence score for a given query and response or a multi-turn conversation.
 
@@ -63,6 +64,7 @@ class ViolenceEvaluator(RaiServiceEvaluatorBase[Union[str, float]]):
         credential,
         azure_ai_project,
     ):
+        self._aggregator = DefectRate(threshold=CONTENT_SAFETY_DEFECT_RATE_THRESHOLD_DEFAULT)
         super().__init__(
             eval_metric=EvaluationMetrics.VIOLENCE,
             azure_ai_project=azure_ai_project,

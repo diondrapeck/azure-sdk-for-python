@@ -8,10 +8,10 @@ from typing import Dict, Union, List
 from typing_extensions import overload, override
 
 from azure.ai.evaluation._model_configurations import Conversation
-from azure.ai.evaluation._evaluators._common import PromptyEvaluatorBase
+from azure.ai.evaluation._evaluators._common import PromptyEvaluatorBase, AggregationMixin
 
 
-class RelevanceEvaluator(PromptyEvaluatorBase):
+class RelevanceEvaluator(PromptyEvaluatorBase, AggregationMixin):
     """
     Evaluates relevance score for a given query and response or a multi-turn conversation, including reasoning.
 

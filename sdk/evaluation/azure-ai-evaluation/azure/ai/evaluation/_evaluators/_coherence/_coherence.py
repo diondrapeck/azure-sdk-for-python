@@ -6,11 +6,11 @@ from typing import Dict, Union, List
 
 from typing_extensions import overload, override
 
-from azure.ai.evaluation._evaluators._common import PromptyEvaluatorBase
+from azure.ai.evaluation._evaluators._common import PromptyEvaluatorBase, AggregationMixin
 from azure.ai.evaluation._model_configurations import Conversation
 
 
-class CoherenceEvaluator(PromptyEvaluatorBase[Union[str, float]]):
+class CoherenceEvaluator(PromptyEvaluatorBase[Union[str, float]], AggregationMixin):
     """
     Evaluates coherence score for a given query and response or a multi-turn conversation, including reasoning.
 

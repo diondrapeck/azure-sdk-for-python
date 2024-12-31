@@ -7,10 +7,10 @@ from typing import Dict
 
 from typing_extensions import overload, override
 
-from azure.ai.evaluation._evaluators._common import PromptyEvaluatorBase
+from azure.ai.evaluation._evaluators._common import PromptyEvaluatorBase, AggregationMixin
 
 
-class SimilarityEvaluator(PromptyEvaluatorBase):
+class SimilarityEvaluator(PromptyEvaluatorBase, AggregationMixin):
     """
     Evaluates similarity score for a given query, response, and ground truth.
 

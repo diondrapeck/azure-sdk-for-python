@@ -7,10 +7,10 @@ from typing_extensions import overload, override
 
 from azure.ai.evaluation._common.utils import nltk_tokenize
 
-from azure.ai.evaluation._evaluators._common import EvaluatorBase
+from azure.ai.evaluation._evaluators._common import EvaluatorBase, AggregationMixin
 
 
-class BleuScoreEvaluator(EvaluatorBase):
+class BleuScoreEvaluator(EvaluatorBase, AggregationMixin):
     """
     Calculate the BLEU score for a given response and ground truth.
 

@@ -5,12 +5,13 @@ from typing_extensions import overload, override
 
 from azure.ai.evaluation._common._experimental import experimental
 from azure.ai.evaluation._common.constants import _InternalEvaluationMetrics
-from azure.ai.evaluation._evaluators._common import RaiServiceEvaluatorBase
+from azure.ai.evaluation._evaluators._common import RaiServiceEvaluatorBase, AggregationMixin
 from azure.ai.evaluation._model_configurations import Conversation
+from azure.ai.evaluation._evaluators._common._aggregation import DefectRate
 
 
 @experimental
-class ECIEvaluator(RaiServiceEvaluatorBase):
+class ECIEvaluator(RaiServiceEvaluatorBase, AggregationMixin):
     """
     Initialize an ECI evaluator to evaluate ECI based on the following guidelines:
     Detects whether ECI is present without a disclaimer in the AI system’s response.
@@ -59,6 +60,8 @@ class ECIEvaluator(RaiServiceEvaluatorBase):
         credential,
         azure_ai_project,
     ):
+        self._aggregator = DefectRate()
+
         super().__init__(
             eval_metric=_InternalEvaluationMetrics.ECI,
             azure_ai_project=azure_ai_project,
