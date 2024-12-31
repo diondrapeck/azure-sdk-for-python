@@ -16,15 +16,13 @@ from promptflow.entities import Run
 from azure.ai.evaluation._common.math import list_mean_nan_safe, apply_transform_nan_safe
 from azure.ai.evaluation._common.utils import validate_azure_ai_project
 from azure.ai.evaluation._exceptions import ErrorBlame, ErrorCategory, ErrorTarget, EvaluationException
-
+from azure.ai.evaluation._evaluators._common import DefectRate, Sum
 from .._constants import (
     CONTENT_SAFETY_DEFECT_RATE_THRESHOLD_DEFAULT,
     EvaluationMetrics,
     DefaultOpenEncoding,
     Prefixes,
     _InternalEvaluationMetrics,
-    DefectRate,
-    Sum,
 )
 from .._model_configurations import AzureAIProject, EvaluationResult, EvaluatorConfig
 from .._user_agent import USER_AGENT
@@ -71,6 +69,7 @@ def _aggregate_defect_rate_metrics(df: pd.DataFrame, evaluators: Dict[str, Calla
 
     for col in df.columns:
         evaluator_name = col.split(".")[0]
+    
         if evaluator_name in evaluators:
             evaluator = evaluators[evaluator_name]
             if hasattr(evaluator, "aggregator") and isinstance(evaluator.aggregator, DefectRate):
@@ -79,6 +78,7 @@ def _aggregate_defect_rate_metrics(df: pd.DataFrame, evaluators: Dict[str, Calla
     defect_rate_df = df[defect_rate_cols]
     defect_rates= {}
     for col in defect_rate_df.columns:
+
         if "_score" in col:
             defect_rate_name = col.replace("_score", "_defect_rate")
         elif "_label" in col:
@@ -89,28 +89,15 @@ def _aggregate_defect_rate_metrics(df: pd.DataFrame, evaluators: Dict[str, Calla
         evaluator_name = col.split(".")[0]
         evaluator = evaluators[evaluator_name]
 
-        aggregation_threshold = evaluator.aggregator.threshold
-        # if aggregation threshold is set, use it to calculate defect rate
-        if aggregation_threshold:
-            print(f"We have a threshold of {aggregation_threshold}")
-            col_with_numeric_values = pd.to_numeric(defect_rate_df[col], errors="coerce")
-            try:
-                col_with_boolean_values = apply_transform_nan_safe(
-                    col_with_numeric_values, lambda x: 1 if x >= aggregation_threshold else 0
-                )
-                defect_rates[defect_rate_name] = round(list_mean_nan_safe(col_with_boolean_values), 2)
-            except EvaluationException:  # only exception that can be cause is all NaN values
-                msg = f"All score evaluations are NaN/None for column {col}. No aggregation can be performed."
-                LOGGER.warning(msg)
-        # if set to None, calculate using booleans
-        else:
-            print("We don't have a threshold")
-            col_with_boolean_values = pd.to_numeric(defect_rate_df[col], errors="coerce")
-            try:
-                defect_rates[defect_rate_name] = round(list_mean_nan_safe(col_with_boolean_values), 2)
-            except EvaluationException:  # only exception that can be cause is all NaN values
-                msg = f"All score evaluations are NaN/None for column {col}. No aggregation can be performed."
-                LOGGER.warning(msg)
+        col_with_numeric_values = pd.to_numeric(defect_rate_df[col], errors="coerce")
+        try:
+            col_with_boolean_values = apply_transform_nan_safe(
+                col_with_numeric_values, lambda x: 1 if x >= evaluator.aggregator.threshold else 0
+            )
+            defect_rates[defect_rate_name] = round(list_mean_nan_safe(col_with_boolean_values), 2)
+        except EvaluationException:  # only exception that can be cause is all NaN values
+            msg = f"All score evaluations are NaN/None for column {col}. No aggregation can be performed."
+            LOGGER.warning(msg)
 
     return defect_rate_cols, defect_rates
 
@@ -157,17 +144,20 @@ def _aggregate_metrics(df: pd.DataFrame, evaluators: Dict[str, Callable]) -> Dic
     :rtype: Dict[str, float]
     """
 
-    # remove "outputs." prefix from column names
+    # remove "outputs." prefix from column names and overwrite renamed columns
     df.rename(columns={col: col.replace("outputs.", "") for col in df.columns}, inplace=True)
+    rename_dict = {
+        col: col.split(".")[0] + "." + METRIC_COLUMN_NAME_REPLACEMENTS[col.split(".")[1]]
+        for col in df.columns if col.split(".")[1] in METRIC_COLUMN_NAME_REPLACEMENTS
+    }
+    df.rename(columns=rename_dict, inplace=True)
 
     # initialize variables
-    handled_columns = []
     metrics = {}
 
     # calculate defect rates for evaluators with aggregator set to "defect_rate"
     defect_rate_cols, defect_rate_values = _aggregate_defect_rate_metrics(df, evaluators)
-    handled_columns.extend(defect_rate_cols)
-    df.drop(columns=handled_columns, inplace=True)
+    df.drop(columns=defect_rate_cols, inplace=True)
     print(f"Defect rate columns: {defect_rate_cols}")
     print(f"Defect rate values: {defect_rate_values}")
     metrics.update(defect_rate_values)
@@ -175,14 +165,15 @@ def _aggregate_metrics(df: pd.DataFrame, evaluators: Dict[str, Callable]) -> Dic
     # calculate sum for evaluators with aggregator set to "sum"
 
     sum_cols, sum_values = _aggregate_sum_metrics(df, evaluators)
-    handled_columns.extend(sum_cols)
-    df.drop(columns=handled_columns, inplace=True)
+    df.drop(columns=sum_cols, inplace=True)
     print(f"Sum columns: {sum_cols}")
     print(f"Sum values: {sum_values}")
     metrics.update(sum_values)
 
     # calculate mean for evaluators with aggregator set to "mean"
     mean_values = df.mean(numeric_only=True).to_dict()
+    mean_cols = list(mean_values.keys())
+    print(f"Mean columns: {mean_cols}")
     print(f"Mean values: {mean_values}")
     metrics.update(mean_values)
 
