@@ -59,22 +59,6 @@ class EvaluationRunProperties:
     EVALUATION_SDK = "_azureml.evaluation_sdk_name"
 
 
-@experimental
-class Mean:
-    def __init__(self):
-        pass
-
-@experimental
-class Sum:
-    def __init__(self):
-        pass
-
-@experimental
-class DefectRate:
-    def __init__(self, threshold: Optional[float]= None):
-        self.threshold = threshold
-
-
 DEFAULT_EVALUATION_RESULTS_FILE_NAME = "evaluation_results.json"
 
 CONTENT_SAFETY_DEFECT_RATE_THRESHOLD_DEFAULT = 4
